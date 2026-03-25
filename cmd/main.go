@@ -29,9 +29,10 @@ func main() {
 	handler := ports.NewHandlers(muxRouter, terminalConfigService)
 	handler.SetupRoutes()
 
-	log.Fatal(http.ListenAndServe(":8080", muxRouter))
+	log.Fatal(http.ListenAndServe(":8081", muxRouter))
 
 	// Now you can use terminalConfigService to handle requests
+
 }
 
 func setupMongoClient() (*mongo.Client, error) {
@@ -45,15 +46,9 @@ func setupMongoClient() (*mongo.Client, error) {
 		return nil, err
 	}
 
-	defer func() {
-		if err = client.Disconnect(context.TODO()); err != nil {
-			panic(err)
-		}
-	}()
-
 	// Send a ping to confirm a successful connection
 	if err := client.Ping(context.TODO(), readpref.Primary()); err != nil {
-		panic(err)
+		return nil, err
 	}
 	fmt.Println("Pinged your deployment. You successfully connected to MongoDB!")
 
