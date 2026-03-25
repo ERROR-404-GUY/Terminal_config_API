@@ -6,6 +6,7 @@ import (
 
 	"go.mongodb.org/mongo-driver/v2/bson"
 	"go.mongodb.org/mongo-driver/v2/mongo"
+	"go.mongodb.org/mongo-driver/v2/mongo/options"
 )
 
 type terminalRepository struct {
@@ -13,8 +14,15 @@ type terminalRepository struct {
 }
 
 func NewTerminalConfigRepository(db *mongo.Database) domain.TerminalRepository {
+	collection := db.Collection("terminal_config")
+	// Enforce unique tid at the DB level
+	_, _ = collection.Indexes().CreateOne(context.Background(), mongo.IndexModel{
+		Keys:    bson.D{{Key: "tid", Value: 1}},
+		Options: options.Index().SetUnique(true),
+	})
+
 	return &terminalRepository{
-		collection: db.Collection("terminal_config"),
+		collection: collection,
 	}
 }
 
@@ -37,6 +45,15 @@ func (r *terminalRepository) UpdateTerminal(ctx context.Context, terminal *domai
 		ctx,
 		bson.M{"tid": terminal.TID},
 		bson.M{"$set": terminal},
+	)
+	return err
+}
+
+func (r *terminalRepository) UpdateRefundAllowed(ctx context.Context, tid string, allowed bool) error {
+	_, err := r.collection.UpdateOne(
+		ctx,
+		bson.M{"tid": tid},
+		bson.M{"$set": bson.M{"refund_allowed": allowed}},
 	)
 	return err
 }
