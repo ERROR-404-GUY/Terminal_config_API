@@ -1,5 +1,8 @@
 package domain
 
+// The command below generates mocks for you for your tests - add similar to handlers.go and repository.go as needed!
+//go:generate mockgen -source=terminal_config_service.go -destination=mocks/mock_terminal_repo.go -package=mocks
+
 import (
 	"context"
 	"fmt"
