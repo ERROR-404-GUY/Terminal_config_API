@@ -139,6 +139,10 @@ type MockTerminalConfigServiceMockRecorder struct {
 	mock *MockTerminalConfigService
 }
 
+func (mr *MockTerminalConfigServiceMockRecorder) GetTerminals(matcher gomock.Matcher) {
+	panic("unimplemented")
+}
+
 // NewMockTerminalConfigService creates a new mock instance.
 func NewMockTerminalConfigService(ctrl *gomock.Controller) *MockTerminalConfigService {
 	mock := &MockTerminalConfigService{ctrl: ctrl}

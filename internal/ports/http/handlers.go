@@ -1,4 +1,5 @@
 package ports
+//go:generate mockgen -source=handlers.go -destination=mocks/mock_handlers.go -package=mocks
 
 import (
 	"encoding/json"

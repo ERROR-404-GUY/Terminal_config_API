@@ -64,18 +64,20 @@
 		<form onsubmit={handleSubmit} class="flex flex-col gap-4 max-w-lg">
 			<div class="flex flex-col gap-1">
 				<label for="product_name" class="opacity-80 mt-2">PRODUCT NAME</label>
-				<select
+				<input
 					id="product_name"
 					bind:value={product_name}
+					list="product_names"
+					placeholder="Enter or select a product..."
 					required
-					class="border border-current bg-black px-3 py-2 text-[#4af626] focus:outline-none focus:ring-1 focus:ring-[#4af626]"
-				>
-					<option value="" disabled selected hidden>Select a product...</option>
-					<option value="POS Terminal">POS Terminal</option>
-					<option value="Model X-90">Model X-90</option>
-					<option value="Handheld Reader">Handheld Reader</option>
-					<option value="Register Pro">Register Pro</option>
-				</select>
+					class="border border-current bg-black px-3 py-2 text-[#4af626] focus:outline-none focus:ring-1 focus:ring-[#4af626] placeholder:text-[#4af626]/50"
+				/>
+				<datalist id="product_names">
+					<option value="POS Terminal"></option>
+					<option value="Model X-90"></option>
+					<option value="Handheld Reader"></option>
+					<option value="Register Pro"></option>
+				</datalist>
 			</div>
 
 			<div class="flex items-center gap-3 mt-4">

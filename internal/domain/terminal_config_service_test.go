@@ -37,6 +37,7 @@ func TestCreateTerminal(t *testing.T) {
 			wantErr: false,
 		},
 		// add more test cases here!
+
 	}
 
 	for _, tt := range tests {
