@@ -60,6 +60,9 @@ func (s *terminalConfigService) CreateTerminal(ctx context.Context, terminal *Te
 	if terminal.ActivationCode == "" {
 		terminal.ActivationCode = GenerateActivationCode()
 	}
+	if terminal.SerialNumber == "" {
+		terminal.SerialNumber = GenerateSerialNumber()
+	}
 
 	return s.repo.CreateTerminal(ctx, terminal)
 }

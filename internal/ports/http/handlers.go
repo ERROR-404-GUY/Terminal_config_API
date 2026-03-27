@@ -28,23 +28,35 @@ func NewHandlers(muxRouter *mux.Router, service domain.TerminalConfigService) Ha
 
 	return h
 }
-
 func (h *handlers) SetupRoutes() {
 	h.muxRouter.HandleFunc("/api/health", HealthCheckHandler).Methods("GET")
+	h.muxRouter.HandleFunc("/api/health", CorsOptionsHandler).Methods("OPTIONS")
 	h.muxRouter.HandleFunc("/api/terminals", h.CreateTerminalHandler).Methods("POST")
+	h.muxRouter.HandleFunc("/api/terminals", h.ListTerminalsHandler).Methods("GET")
+	h.muxRouter.HandleFunc("/api/terminals", CorsOptionsHandler).Methods("OPTIONS")
 	h.muxRouter.HandleFunc("/api/terminals/random", h.CreateRandomTerminalHandler).Methods("POST")
+	h.muxRouter.HandleFunc("/api/terminals/random", CorsOptionsHandler).Methods("OPTIONS")
 	h.muxRouter.HandleFunc("/api/terminals/{tid}", h.GetTerminalHandler).Methods("GET")
 	h.muxRouter.HandleFunc("/api/terminals/{tid}", h.UpdateTerminalHandler).Methods("PUT")
 	h.muxRouter.HandleFunc("/api/terminals/{tid}", h.DeleteTerminalHandler).Methods("DELETE")
-	h.muxRouter.HandleFunc("/api/terminals", h.ListTerminalsHandler).Methods("GET")
+	h.muxRouter.HandleFunc("/api/terminals/{tid}", CorsOptionsHandler).Methods("OPTIONS")
+}
+
+func CorsOptionsHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+	w.WriteHeader(http.StatusOK)
 }
 
 func HealthCheckHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.WriteHeader(200)
 	w.Write([]byte("OK"))
 }
 
 func (h *handlers) CreateTerminalHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	var terminal domain.Terminal
 	if err := json.NewDecoder(r.Body).Decode(&terminal); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
@@ -76,6 +88,7 @@ func (h *handlers) CreateTerminalHandler(w http.ResponseWriter, r *http.Request)
 }
 
 func (h *handlers) GetTerminalHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	vars := mux.Vars(r)
 	tid := vars["tid"]
 
@@ -92,6 +105,7 @@ func (h *handlers) GetTerminalHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *handlers) UpdateTerminalHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	vars := mux.Vars(r)
 	tid := vars["tid"]
 
@@ -161,6 +175,7 @@ func (h *handlers) UpdateTerminalHandler(w http.ResponseWriter, r *http.Request)
 }
 
 func (h *handlers) DeleteTerminalHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	vars := mux.Vars(r)
 	tid := vars["tid"]
 
@@ -174,6 +189,7 @@ func (h *handlers) DeleteTerminalHandler(w http.ResponseWriter, r *http.Request)
 }
 
 func (h *handlers) CreateRandomTerminalHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	terminal, err := h.service.CreateRandomTerminal(r.Context())
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -187,6 +203,7 @@ func (h *handlers) CreateRandomTerminalHandler(w http.ResponseWriter, r *http.Re
 }
 
 func (h *handlers) ListTerminalsHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	terminals, err := h.service.ListTerminals(r.Context())
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
